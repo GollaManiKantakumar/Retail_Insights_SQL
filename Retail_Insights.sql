@@ -22,17 +22,6 @@ use Retail_Insights;
 -- ============================================================
 
 
--- ============================================================
--- SECTION 1 : SCHEMA DESIGN
--- ============================================================
-
--- Create and switch to a dedicated database
-CREATE DATABASE IF NOT EXISTS FreshMartDB
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE FreshMartDB;
-
 
 -- Drop tables in FK-safe order (child → parent)
 DROP TABLE IF EXISTS SalesTransactions;
