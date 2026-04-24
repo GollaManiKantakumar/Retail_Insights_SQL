@@ -149,21 +149,18 @@ WHERE SaleDate >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
 AND p.StockCount > 0
 ORDER BY TiedUpCapital DESC, p.ProductName ASC;
 
-SELECT
-c.CategoryName,
-c.Department,
-COUNT(DISTINCT st.TransactionID) AS TotalTransactions,
-SUM(st.QuantitySold) AS TotalUnitsSold,
-ROUND(SUM(st.QuantitySold * st.SalePrice), 2) AS TotalRevenue,
-ROUND(
-SUM(st.QuantitySold * st.SalePrice) * 100.0
-/ SUM(SUM(st.QuantitySold * st.SalePrice)) OVER (),
-2
-) AS RevenueSharePct
+SELECT 
+    c.CategoryName,
+    c.Department,
+    COUNT(st.TransactionID) AS TotalTransactions,
+    SUM(st.QuantitySold) AS TotalUnitsSold,
+    SUM(st.QuantitySold * st.SalePrice) AS TotalRevenue
 FROM SalesTransactions st
-JOIN Products p ON st.ProductID = p.ProductID
-JOIN Categories c ON p.CategoryID = c.CategoryID
-WHERE st.SaleDate >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m-01')
-AND st.SaleDate < DATE_FORMAT(CURDATE(), '%Y-%m-01')
-GROUP BY c.CategoryID, c.CategoryName, c.Department
+JOIN Products p 
+    ON st.ProductID = p.ProductID
+JOIN Categories c 
+    ON p.CategoryID = c.CategoryID
+WHERE st.SaleDate >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+  AND st.SaleDate < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+GROUP BY c.CategoryName, c.Department
 ORDER BY TotalRevenue DESC;
